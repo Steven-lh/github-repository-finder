@@ -1,46 +1,196 @@
-# Astro Starter Kit: Basics
+# GitHub Repository Finder
 
-```sh
-pnpm create astro@latest -- --template basics
+This is a **GitHub Repository Finder** project built with **Astro**, focused on practicing **API integration**, **asynchronous JavaScript**, and **UI state management**.
+
+The application allows users to select a programming language and fetch a **random GitHub repository** related to that language.
+
+---
+
+## Description
+
+The app fetches data from **two external sources**:
+
+1. **Programming languages list** (static JSON)
+2. **GitHub Repository Search API**
+
+Users can:
+
+* Select a programming language from a dropdown
+* Fetch a random repository related to that language
+* View key repository information:
+
+  * Name
+  * Description
+  * Language
+  * Stars
+  * Forks
+  * Open issues
+* Click a **Refresh** button to get another random repository.
+
+The application properly handles:
+
+* Loading states
+* Empty results
+* API errors (including GitHub rate limits)
+
+---
+
+## Tech Stack
+
+* **Astro**
+* **Vanilla JavaScript**
+* **Tailwind CSS**
+* **GitHub REST API**
+
+---
+
+## External APIs & Resources
+
+* **GitHub Repository Search API**
+  [https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-repositories](https://docs.github.com/en/rest/search/search?apiVersion=2022-11-28#search-repositories)
+
+* **Programming Language Data (JSON)**
+  [https://raw.githubusercontent.com/kamranahmedse/githunt/master/src/components/filters/language-filter/languages.json](https://raw.githubusercontent.com/kamranahmedse/githunt/master/src/components/filters/language-filter/languages.json)
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+* **Node.js** (v18 or later recommended)
+* One of the following package managers:
+
+  * **pnpm** (recommended)
+  * **npm**
+  * **yarn**
+
+---
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Steven-lh/github-random-repo-finder.git
+cd ../github-random-repo-finder
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-## 🚀 Project Structure
+### 2. Install dependencies
 
-Inside of your Astro project, you'll see the following folders and files:
+#### Using pnpm (recommended)
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```bash
+pnpm install
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+#### Using npm
 
-## 🧞 Commands
+```bash
+npm install
+```
 
-All commands are run from the root of the project, from a terminal:
+#### Using yarn
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+```bash
+yarn install
+```
 
-## 👀 Want to learn more?
+---
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Running the Project
+
+Start the development server:
+
+```bash
+pnpm dev
+# or
+npm run dev
+# or
+yarn dev
+```
+
+The application will be available at:
+
+```
+http://localhost:4321
+```
+
+---
+
+## Build for Production
+
+```bash
+pnpm build
+# or
+npm run build
+# or
+yarn build
+```
+
+Preview the production build:
+
+```bash
+pnpm preview
+```
+
+---
+
+## Project Structure
+
+```
+github-random-repo-finder/
+├─ public/
+├─ src/
+│  ├─ assets/
+│  ├─ components/
+│  │  ├─ Header.astro
+│  │  ├─ LanguageSelector.astro
+│  │  ├─ RepositoryPreview.astro
+│  ├─ layouts/
+│  │  └─ Layout.astro
+│  ├─ pages/
+│  │  └─ index.astro
+│  ├─ styles/
+│  │  └─ global.css
+├─ astro.config.mjs
+├─ package.json
+├─ pnpm-lock.yaml
+├─ tsconfig.json
+└─ README.md
+```
+
+---
+
+## Project Goals
+
+This project is designed to help you practice:
+
+* Working with **external APIs**
+* Handling **asynchronous requests** using `fetch`
+* Managing **UI states** (loading, error, empty)
+* Component-based structure in Astro
+* Building a responsive and user-friendly interface
+
+---
+
+## Reference
+
+This project follows the requirements described in:
+
+[https://roadmap.sh/projects/github-random-repo](https://roadmap.sh/projects/github-random-repo)
+
+---
+
+## Contact
+
+If you have suggestions or feedback, feel free to open an issue or reach out via GitHub.
+
+---
+
+Thanks.
+
