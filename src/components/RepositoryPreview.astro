@@ -1,0 +1,121 @@
+<section class="flex flex-col justify-between w-full h-[50vh] sm:h-[40vh] mt-4">
+  <div
+    id="divResults"
+    class="flex flex-col justify-center items-center w-full h-full border rounded-2xl text-lg sm:text-xl px-4 py-4"
+  >
+    Please, select a language.
+  </div>
+
+  <button
+    id="refresh-button"
+    class="w-full h-16 mt-4 rounded-2xl text-lg bg-black text-white"
+  >
+    Refresh
+  </button>
+</section>
+
+<script is:inline>
+  let currentLanguage = "";
+
+  const refreshButton = document.getElementById("refresh-button");
+  const divResults = document.getElementById("divResults");
+
+  window.addEventListener("language:selected", (e) => {
+    currentLanguage = e.detail;
+  });
+
+  async function getRepositories(language) {
+    try {
+      const q = language ? `language:${language}` : "stars:>0";
+
+      const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc`;
+
+      const response = await fetch(url, {
+        headers: {
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 403) {
+          throw new Error("rate-limit");
+        }
+        throw new Error("fetch-error");
+      }
+
+      const data = await response.json();
+      return data.items ?? [];
+    } catch (error) {
+      if (error.message === "rate-limit") {
+        showError("Rate limit reached. Please wait and try again.");
+      } else {
+        showError("Failed fetching repositories.");
+      }
+      return [];
+    }
+  }
+
+  getRepositories(currentLanguage);
+
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+
+  refreshButton.addEventListener("click", async (e) => {
+    if (currentLanguage === undefined) {
+      showError("You must select a language.");
+      return;
+    }
+
+    showLoading();
+
+    const repos = await getRepositories(currentLanguage);
+
+    if (!repos.length) return;
+
+    let randomRepository = getRandomInt(0, repos.length);
+
+    divResults.classList.remove("bg-red-300", "text-red-900");
+    divResults.innerHTML = `
+    <div class="w-full h-full justify-between flex flex-col">
+      <h3 class="text-2xl font-bold w-full p-3">${repos[randomRepository].name}</h3>
+      <p class="flex items-center text-xl text-gray-500 w-full p-3">${repos[randomRepository].description}</p>
+      <div class="flex text-xl text-gray-500 justify-between w-full p-3">
+        <span>
+          ${repos[randomRepository].language ?? "Unknown"}
+        </span>
+        <span class="flex items-center gap-2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-star text-gray-600"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" /></svg>${repos[randomRepository].stargazers_count}
+        </span>
+        <span class="flex items-center gap-2">
+          <svg width="20" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-git-fork text-gray-600" viewBox="0 0 24 24"><path fill="none" stroke="none" d="M0 0h24v24H0z"/><path d="M10 18a2 2 0 1 0 4 0 2 2 0 1 0-4 0M5 6a2 2 0 1 0 4 0 2 2 0 1 0-4 0m10 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0"/><path d="M7 8v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8m-5 4v4"/></svg>${repos[randomRepository].forks_count}
+        </span>
+        <span class="flex items-center gap-2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-exclamation-circle text-gray-600"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 9v4" /><path d="M12 16v.01" /></svg>${repos[randomRepository].open_issues_count}
+        </span>
+      </div>
+    </div>
+    `;
+    console.log(repos);
+  });
+
+  function showError(message) {
+    divResults.classList.add("bg-red-200", "text-red-900");
+
+    divResults.textContent = message;
+    refreshButton.classList.remove("bg-black");
+    refreshButton.classList.add("bg-red-700");
+    refreshButton.textContent = "Click to try again.";
+  }
+
+  function showLoading() {
+    divResults.classList.remove("bg-red-200", "text-red-900");
+    divResults.textContent = "Loading, please wait...";
+    refreshButton.classList.remove("bg-red-700");
+    refreshButton.classList.add("bg-black");
+    refreshButton.textContent = "Refresh";
+  }
+</script>
